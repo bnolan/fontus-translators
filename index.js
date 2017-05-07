@@ -5,10 +5,6 @@ const app = express();
 
 app.get('/reddit', reddit);
 
-app.get('/', (req, res) => {
-  res.send('Hello Worlds!')
-});
-
 app.listen(3000, () => {
-  console.log('Example app listening on port 3000!')
+  console.log('Translator app listening on port 3000!')
 });
