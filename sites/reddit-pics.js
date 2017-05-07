@@ -14,7 +14,7 @@ const renderDocument = (obj) => {
 
 const generateScene = (obj) => {
   const p = {
-    x: -10, y: 0, z: 0
+    x: -1.5, y: 1.0, z: 0
   };
 
   const r = {
@@ -27,35 +27,48 @@ const generateScene = (obj) => {
     return;
   }
 
-  const posts = obj.data.children.filter((c) => c.data.url.match('.jpg')).slice(0, 40);
+  const posts = obj.data.children.filter((c) => c.data.url.match('.jpg')).slice(0, 14);
+
+  var index = 0;
 
   billboards = posts.map((c) => {
-    p.x += 4;
+    index++;
 
-    if (p.x > 10) {
-      p.x = -10;
-      p.z -= 8;
+    const focussed = index === 3;
+
+    const scale = focussed ? '1.5 1.5 0.1' : '0.45 0.45 0.1';
+
+    p.x += 0.5;
+
+    if (p.x > 3) {
+      p.x = -1;
+      p.y += 0.75;
     }
+
+    p.z = focussed ? 0.1 : 0;
 
     r.y = Math.floor(Math.random() * 90) - 45;
 
+    // lol ASIO
+    const imageUrl = c.data.url.replace(/https:/, 'http:');
+
+
     return (
-      <a-entity position={[p.x, p.y, p.z].join(' ')} rotation={[r.x, r.y, r.z].join(' ')}>
-        <a-hypercard position='0 1.1 0.1' scale='2.2 2.2 1'>
-          <div style={{color: '#000000', padding: '20px'}}>
-            <center style={{color: '#000000'}}>
-              {c.data.url}
-              <img src={c.data.url} style='width: 400px; height: 400px' />
+      <a-entity position={[p.x, p.y, p.z].join(' ')}>
+        <a-hypercard position='0 0.25 0.1' scale={scale}>
+          <div style={{color: '#000000', background: '#cacaca', padding: '10px'}}>
+            <center>
+              <img src={imageUrl} style='width: 400px; height: 400px' />
             </center>
 
             <h3 style={{color: '#000000'}}>{c.data.title.slice(0, 64)}...</h3>
           </div>
         </a-hypercard>
-        <a-box scale='3 3 0.19' position='0 1.5 0' color='#f3f3f3' />
       </a-entity>
     );
 
-    <a-obj-model src='models/billboard.obj' rotation='0 0 0' scale='0.60 0.60 0.60' position='0 0 0' />
+    // <a-box scale='0.5 0.5 0.09' position='0 0.25 0' color='#cacaca' />
+    // <a-obj-model src='models/billboard.obj' rotation='0 0 0' scale='0.60 0.60 0.60' position='0 0 0' />
   });
 
   return (
@@ -63,7 +76,7 @@ const generateScene = (obj) => {
       {billboards}
 
       <a-sphere id='sky' position="0 0 0" scale="-64 64 64" color="#ff7700" material="flat-shading: true"></a-sphere>
-      <a-box id='floor' position="0 -0.1 0" scale="64 0.01 64" color="#ffffff"></a-box>
+      <a-box id='floor' position="0 -0.1 0" scale="64 0.01 64" color="#777777"></a-box>
     </a-scene>
   );
 };
